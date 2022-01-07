@@ -9,13 +9,20 @@ function App() {
   const [cep, setCep] = useState({})
 
 
-  document.addEventListener("keypress",function EnterKeyUp(event) {
-    if (event.Key === "Enter") {
-      const btn = document.querySelector(".buttonSearch");
-      btn.click();
-    }
-  });
 
+  useEffect(() => {
+    const listener = event => {
+      if (event.code === "Enter" || event.code === "NumpadEnter") {
+        const btn = document.querySelector(".buttonSearch");
+        btn.click();
+        event.preventDefault();
+      }
+    };
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  }, []);
   
 
   async function handleSearch() {
@@ -51,7 +58,7 @@ function App() {
         </button>
       </div>
 
-      { Object.keys(cep).length > 0 && (
+      {Object.keys(cep).length > 0 && (
         <main className="main">
           <h2>CEP: {cep.cep}</h2>
 
